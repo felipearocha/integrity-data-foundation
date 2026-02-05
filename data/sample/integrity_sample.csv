@@ -1,0 +1,4 @@
+Unit ID,Circuit /Equipment Tag,Equipment ID (Asset ID),Damage Mechanism as per Corrosion Study,Design Pressure (KPag),Design Temperature (deg. C),Last Inspection Date,Max STCR (MPY),Max LTCR (MPY),Risk Rank
+984,SPL-13,984C-6003,Thinning (Internal Corrosion),1500,120,2025-10-15,5.2,2.1,Medium
+984,WATR-5,984C-600X,,-50,95,15-10-2025,n/a,1.6,Med
+61A,PROD-11,61AC-6010,SCC (Susceptibility Screening),2300,180,2024-06-02,3.1,1.4,High

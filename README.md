@@ -25,22 +25,25 @@ This repo is designed around:
 - security-aware handling of data artifacts
 
 ## Quickstart
-1. Create and activate a virtual environment.
-2. Install dependencies.
-3. Run the example pipeline on sample data.
+Create and activate a virtual environment, install dependencies, and run the example pipeline on sample data.
 
-Commands:
-
+Windows:
 python -m venv .venv
-. .venv/Scripts/activate
+. .venv\Scripts\activate
 pip install -r requirements.txt
-python -m src.integrity_data_foundation.pipeline --input data/sample --output out
+python -m integrity_data_foundation.pipeline --input data/sample --output out
+
+macOS/Linux:
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m integrity_data_foundation.pipeline --input data/sample --output out
 
 ## Outputs
 The pipeline produces:
 - normalized datasets
 - validation reports (what failed, why, where)
-- a structured export for downstream systems
+- a structured export for downstream decision workflows
 
 ## Security note
 Treat engineering data as decision-critical. This repository includes guidance to avoid leaking sensitive information and to keep data lineage and integrity checks visible.
