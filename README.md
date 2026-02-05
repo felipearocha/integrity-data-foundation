@@ -1,35 +1,49 @@
-# integrity-data-foundation
-Data validation and structuring baselines for integrity and RBI decision support.
+# Integrity Data Foundation
 
-## integrity-data-foundation
+Engineering-first data validation and structuring baselines for integrity and risk-based inspection decision support.
 
-Data validation and structuring baselines for integrity and RBI decision support.
+This repository focuses on the part most teams underestimate: making engineering data consistent, traceable, and defensible before adding advanced analytics or machine learning. The goal is not to produce impressive outputs, but to build a reliable foundation where assumptions are explicit and failure modes are visible.
 
-This repository focuses on the work that determines whether integrity analytics and ML can be trusted: data structure, validation, traceability, and failure visibility. It is not a production system and it does not include any client data.
+## What this is
+A set of lightweight Python baselines to:
+- validate and normalize integrity datasets
+- enforce engineering-aware data contracts
+- expose inconsistencies early (instead of hiding them)
+- produce structured outputs ready for downstream decision workflows
 
-### What this is
-A small Python package that:
-- Normalizes common integrity fields into consistent formats
-- Validates required columns, units, ranges, and allowed values
-- Produces a clean dataset plus a validation report that makes issues explicit
+## What this is not
+This is not a production product, not a client deliverable, and not a benchmark repository. No client data is included.
 
-### What this is not
-This repository does not:
-- Replace engineering judgment
-- Provide RBI calculations or inspection plans
-- Claim model accuracy or production readiness
+## Why it matters
+In integrity programs, poor data does not only reduce accuracy. It changes decisions. A clean, structured, and auditable dataset is often the largest lever for ROI because it reduces rework, shortens decision cycles, and increases trust in outputs.
 
-### Why it matters
-In integrity programs, poor data quality does not only reduce accuracy, it distorts decisions. The fastest way to lose trust in automation is to hide uncertainty. This project is designed to surface it.
+## Repository principles
+This repo is designed around:
+- explicit assumptions
+- transparent validation logic
+- deterministic outputs
+- security-aware handling of data artifacts
 
-### Design principle
-Make assumptions explicit and make failure modes visible.
+## Quickstart
+1. Create and activate a virtual environment.
+2. Install dependencies.
+3. Run the example pipeline on sample data.
 
-### Quickstart
+Commands:
 
-1) Create a virtual environment and install:
-```bash
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-pip install -e .
+. .venv/Scripts/activate
+pip install -r requirements.txt
+python -m src.integrity_data_foundation.pipeline --input data/sample --output out
+
+## Outputs
+The pipeline produces:
+- normalized datasets
+- validation reports (what failed, why, where)
+- a structured export for downstream systems
+
+## Security note
+Treat engineering data as decision-critical. This repository includes guidance to avoid leaking sensitive information and to keep data lineage and integrity checks visible.
+
+## License
+MIT
