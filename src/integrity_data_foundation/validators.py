@@ -11,6 +11,12 @@ EQUIP_RE = re.compile(r"^[0-9]{3}[A-Z]-[0-9]{4}$")  # example: 100A-0001
 DATE_RE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 ALLOWED_RISK = {"Low", "Medium", "High"}
+NUMERIC_FIELDS = [
+    "Design Pressure (KPag)",
+    "Design Temperature (deg. C)",
+    "Max STCR (MPY)",
+    "Max LTCR (MPY)",
+]
 
 def _text(value: Any) -> str:
     """Cell as stripped text; blank cells are "", not "nan"."""
@@ -54,15 +60,16 @@ def validate_dataframe(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[ValidationI
             issues.append(ValidationIssue(idx, "Equipment ID (Asset ID)", "warn",
                                           "Equipment id format differs from example ###X-####", equip))
 
+        for col in NUMERIC_FIELDS:
+            v = row.get(col)
+            if pd.notna(v) and pd.isna(pd.to_numeric(v, errors="coerce")):
+                issues.append(ValidationIssue(idx, col, "warn",
+                                              "Not numeric, blank in normalized output", v))
+
         dp = row.get("Design Pressure (KPag)")
-        if pd.notna(dp):
-            try:
-                if float(dp) < 0:
-                    issues.append(ValidationIssue(idx, "Design Pressure (KPag)", "error",
-                                                  "Design pressure must be >= 0", dp))
-            except Exception:
-                issues.append(ValidationIssue(idx, "Design Pressure (KPag)", "warn",
-                                              "Design pressure not numeric", dp))
+        if pd.notna(pd.to_numeric(dp, errors="coerce")) and float(dp) < 0:
+            issues.append(ValidationIssue(idx, "Design Pressure (KPag)", "error",
+                                          "Design pressure must be >= 0", dp))
 
         d = _text(row.get("Last Inspection Date"))
         if d and not DATE_RE.match(d):

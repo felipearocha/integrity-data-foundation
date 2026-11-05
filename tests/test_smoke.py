@@ -29,6 +29,8 @@ def test_sample_fails_with_the_seeded_errors(tmp_path):
         (1, "Design Pressure (KPag)"),
         (2, "Unit ID"),
     }
+    assert (1, "Max STCR (MPY)", "n/a") in {(i["row_index"], i["field"], i["value"]) for i in issues}
+    assert len(issues) == 8
     assert (tmp_path / "normalized_integrity_data.csv").exists()
 
 
@@ -52,3 +54,7 @@ def test_blank_stays_blank_after_normalize():
     out = normalize_dataframe(pd.DataFrame({"Risk Rank": [" Low ", float("nan")]}))
     assert out["risk_rank"][0] == "Low"
     assert pd.isna(out["risk_rank"][1])
+
+
+def test_non_numeric_cell_is_reported():
+    assert issues_of(**{"Max LTCR (MPY)": "n/a"}) == [("Max LTCR (MPY)", "warn")]
