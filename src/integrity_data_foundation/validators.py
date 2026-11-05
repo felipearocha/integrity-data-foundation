@@ -12,6 +12,10 @@ DATE_RE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 ALLOWED_RISK = {"Low", "Medium", "High"}
 
+def _text(value: Any) -> str:
+    """Cell as stripped text; blank cells are "", not "nan"."""
+    return "" if pd.isna(value) else str(value).strip()
+
 @dataclass
 class ValidationIssue:
     row_index: int
@@ -37,19 +41,18 @@ def validate_dataframe(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[ValidationI
         return df, issues
 
     for idx, row in df.iterrows():
-        unit = str(row.get("Unit ID", "")).strip()
+        for col in required:
+            if not _text(row.get(col)):
+                issues.append(ValidationIssue(idx, col, "error", f"{col} is required", None))
+
+        unit = _text(row.get("Unit ID"))
         if unit and not UNIT_RE.match(unit):
             issues.append(ValidationIssue(idx, "Unit ID", "error", "Expected 3-digit unit id", unit))
 
-        equip = str(row.get("Equipment ID (Asset ID)", "")).strip()
+        equip = _text(row.get("Equipment ID (Asset ID)"))
         if equip and not EQUIP_RE.match(equip):
             issues.append(ValidationIssue(idx, "Equipment ID (Asset ID)", "warn",
                                           "Equipment id format differs from example ###X-####", equip))
-
-        dmg = str(row.get("Damage Mechanism as per Corrosion Study", "")).strip()
-        if not dmg:
-            issues.append(ValidationIssue(idx, "Damage Mechanism as per Corrosion Study", "error",
-                                          "Damage mechanism is required", dmg))
 
         dp = row.get("Design Pressure (KPag)")
         if pd.notna(dp):
@@ -61,12 +64,12 @@ def validate_dataframe(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[ValidationI
                 issues.append(ValidationIssue(idx, "Design Pressure (KPag)", "warn",
                                               "Design pressure not numeric", dp))
 
-        d = str(row.get("Last Inspection Date", "")).strip()
+        d = _text(row.get("Last Inspection Date"))
         if d and not DATE_RE.match(d):
             issues.append(ValidationIssue(idx, "Last Inspection Date", "warn",
                                           "Expected date format YYYY-MM-DD", d))
 
-        rr = str(row.get("Risk Rank", "")).strip()
+        rr = _text(row.get("Risk Rank"))
         if rr and rr not in ALLOWED_RISK:
             issues.append(ValidationIssue(idx, "Risk Rank", "warn",
                                           "Risk rank not in {Low, Medium, High}", rr))
@@ -92,7 +95,7 @@ def normalize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     for c in ["unit_id", "circuit_tag", "equipment_id", "damage_mechanism", "last_inspection_date", "risk_rank"]:
         if c in out.columns:
-            out[c] = out[c].astype(str).str.strip()
+            out[c] = out[c].astype("string").str.strip()
 
     for c in ["design_pressure_kpag", "design_temperature_c", "max_stcr_mpy", "max_ltcr_mpy"]:
         if c in out.columns:
