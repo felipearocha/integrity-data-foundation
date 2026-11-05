@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 class IntegrityRecord(BaseModel):
-    unit_id: str = Field(..., description="Unit identifier, e.g., 612")
+    unit_id: str = Field(..., description="Unit identifier, e.g., 100")
     circuit_tag: str = Field(..., description="Circuit or equipment tag")
     equipment_id: str = Field(..., description="Equipment identifier")
     damage_mechanism: str = Field(..., description="Primary damage mechanism label")

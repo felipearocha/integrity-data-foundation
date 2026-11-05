@@ -7,7 +7,7 @@ from typing import List, Any, Tuple
 import pandas as pd
 
 UNIT_RE = re.compile(r"^[0-9]{3}$")
-EQUIP_RE = re.compile(r"^[0-9]{3}[A-Z]-[0-9]{4}$")  # example: 612C-6003
+EQUIP_RE = re.compile(r"^[0-9]{3}[A-Z]-[0-9]{4}$")  # example: 100A-0001
 DATE_RE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 ALLOWED_RISK = {"Low", "Medium", "High"}
