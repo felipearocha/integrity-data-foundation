@@ -30,7 +30,8 @@ def run(input_dir: Path, output_dir: Path) -> int:
         console.print(f"[red]Missing input file:[/red] {input_path}")
         return 2
 
-    df = pd.read_csv(input_path)
+    # Only empty cells are missing; "n/a" and similar reach the validator as text
+    df = pd.read_csv(input_path, keep_default_na=False, na_values=[""])
     _, issues = validate_dataframe(df)
 
     output_dir.mkdir(parents=True, exist_ok=True)
